@@ -253,14 +253,6 @@ namespace WebApp.Controllers
         }
 
 
-        [HttpPost]
-        [Route("api/forge/test")]
-        public async Task<IActionResult> testEndpoint([FromForm]StartWorkitemInput input)
-        {
-            Console.WriteLine(input.ToString());
-            return Ok();
-        }
-
         /// <summary>
         /// Start a new workitem
         /// </summary>
@@ -404,7 +396,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> ClearAccount()
         {
             // clear account
-            //await _designAutomation.DeleteForgeAppAsync("me");
+            await _designAutomation.DeleteForgeAppAsync("me");
             return Ok();
         }
     }
