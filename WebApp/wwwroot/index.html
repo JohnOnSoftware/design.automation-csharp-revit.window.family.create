@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Autodesk Forge - Design Automation</title>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="https://github.com/Autodesk-Forge/learn.forge.viewhubmodels/raw/master/img/favicon.ico">
+    <!-- Common packages: jQuery, Bootstrap -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- .NET SignalR -->
+    <script src="//unpkg.com/@aspnet/signalr@1.1.0/dist/browser/signalr.min.js"></script>
+    <!-- Files for this project -->
+    <script src="/js/ForgeDesignAutomation.js"></script>
+</head>
+
+<body style="height: 100%;">
+    <!-- Fixed navbar by Bootstrap: https://getbootstrap.com/examples/navbar-fixed-top/ -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav left">
+                <li>
+                    <a href="http://developer.autodesk.com" target="_blank">
+                        <img alt="Autodesk Forge" src="//developer.static.autodesk.com/images/logo_forge-2-line.png"
+                             height="20">
+                    </a>
+                </li>
+            </ul>
+            <div style="float: right; margin-top: 15px; cursor: pointer;">
+                <span style="padding-right: 5px;" data-toggle="modal" data-target="#defineActivityModal" title="Configura AppBundle & Activity">
+                    <span class="glyphicon glyphicon-cog glyphiconTop mlink"></span> Configure
+                </span>
+            </div>
+        </div>
+    </nav>
+    <!-- End of navbar -->
+    <div class="container-fluid" style="margin-top: 70px;">
+        <div class="row">
+            <div class="col-sm-6">
+
+                <div class="row">
+                    <div style="padding-top: 10px; text-align: center;">
+                        <div class="col-lg-4">
+                            <div class="thumbnail">
+                                <img src="/res/double-hung.png" class="img-rounded" width="150px" height="=150px" alt="Window Double Hung Family">
+                                <div class="caption">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="radio" name='windowStyle' value='DoubleHungWindow' checked>
+                                        </span>
+                                        <label class="form-control">Double Hung</label>
+                                    </div><!-- /input-group -->
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-4">
+                            <div class="thumbnail">
+                                <img src="/res/fixed.png" class="img-rounded" width="150px" height="=150px" alt="Window Fixed Family">
+                                <div class="caption">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="radio" name='windowStyle' value='FixedWindow'>
+                                        </span>
+                                        <label class="form-control">Fixed</label>
+                                    </div><!-- /input-group -->
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="thumbnail">
+                                <img src="/res/sliding-double.png" class="img-rounded" width="150px" height="=150px" alt="Window Sliding Double">
+                                <div class="caption">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <input type="radio" name='windowStyle' value='SlidingDoubleWindow'>
+                                        </span>
+                                        <label class="form-control">Sliding Double</label>
+                                    </div><!-- /input-group -->
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div><!-- /.row -->
+
+
+                <div class="row" id="windowDoubleHungParams">
+
+                    <div class="col-lg-4">
+                        <h4>Dimensions</h4>
+                        <div style="padding-top: 5px; text-align: left;">
+
+                            <div class="input-group">
+                                <span class="input-group-addon">Type Name</span>
+                                <input id="typeNameId" type="text" class="form-control" placeholder="NewType">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon">Height&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <input id="windowHeightId" type="number" class="form-control" placeholder="4" min="0">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon">Width&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <input id="windowWidthId" type="number" class="form-control" placeholder="2" min="0">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon">Inset&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <input id="windowInsetId" type="number" class="form-control" placeholder="0.05" min="0">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon">Sill Height</span>
+                                <input id="windowSillHeightId" type="number" class="form-control" placeholder="3" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4">
+                        <h4>Types &nbsp;&nbsp;&nbsp; <button id='createNewType' class="label label-warning">Add</button></h4>
+                        <div style=" text-align: left; overflow:auto; height: 250px; background-color:azure">
+                            <div class="container-fluid list-group" id="familyTypes">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <h4>Materials</h4>
+                        <div style="padding-top: 5px; text-align: left;">
+                            <div class="form-group">
+                                <label for="glassPaneMaterialSelId" class="col-lg-5 control-label">
+                                    <h5>Glass Pane</h5>
+                                </label>
+                                <div class="col-lg-7">
+                                    <select id="glassPaneMaterialSelId" class="form-control">
+                                        <option>Default</option>
+                                        <option>Glass</option>
+                                        <option>Glass, Matte</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <div class="form-group">
+                                <label for="sashMaterialSelId" class="col-sm-5 control-label">
+                                    <h5>Sash</h5>
+                                </label>
+                                <div class="col-sm-7">
+                                    <select id="sashMaterialSelId" class="form-control">
+                                        <option>Default</option>
+                                        <option>Metal</option>
+                                        <option>Copper</option>
+                                        <option>Gold</option>
+                                        <option>Maple</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-addon">Family Name</span>
+                                <input id="windowFamilyNameId" type="text" class="form-control" placeholder="Double Hung.rfa">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div style="padding-top: 20px; text-align: left;">
+
+                        <div class="form-group">
+                            <label for="inputFile">Window Family Template File</label>
+                            <input type="file" class="form-control-file" id="inputFile">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div style="padding-top: 10px; text-align: left;">
+
+                        <div class="form-group">
+                            <label for="activity">Existing activities</label>
+                            <select class="form-control" id="activity"> </select>
+                        </div>
+                        </div>
+                    </div>
+                        <center><button class="btn btn-primary" id="startWorkitem">Start workitem</button></center><br />
+                    </div>
+                    <div class="col-sm-6">
+                        <pre id="outputlog" style="height: calc(100vh - 120px);; overflow-y: scroll;"></pre>
+                    </div>
+                </div>
+            </div>
+    <!-- Modal Define AppBundle & Activity -->
+    <div class="modal fade" id="defineActivityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cancel"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Create/Update AppBundle & Activity</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning"><center>Define AppBundle &amp; Activity only once.<br />Redefine only when your plugin code change (creates a new version).</center></div>
+                    <div class="form-group">
+                        <label for="localBundles">Select a local AppBundle:</label>
+                        <select class="form-control" id="localBundles"> </select>
+                        <b>Tip:</b> Make sure .ZIP bundles are placed at <b>/bundles/</b> folder
+                    </div>
+                    <div class="form-group">
+                        <label for="engines">Select engine:</label>
+                        <select class="form-control" id="engines"> </select>
+                    </div>
+                    For this sample the .ZIP name is used as suffix to define <b>AppBundle</b> and <b>Activity</b>
+                    names. Activities will have file and params input, and file output.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" id="clearAccount">Clear account</button>
+                    <button type="button" class="btn btn-primary" id="createAppBundleActivity">Create/Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
