@@ -28,15 +28,6 @@ namespace WebApp
             {
                 routes.MapHub<Controllers.DesignAutomationHub>("/api/signalr/designautomation");
             });
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-
-            //app.Run(async (context) =>
-            //{
-            //    await context.Response.WriteAsync("Hello World!");
-            //});
         }
     }
 }

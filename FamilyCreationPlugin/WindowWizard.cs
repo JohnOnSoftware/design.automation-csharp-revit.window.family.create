@@ -21,6 +21,7 @@
 //
 
 using System;
+using System.IO;
 using Autodesk.Revit;
 
 namespace Autodesk.Forge.RevitIO.CreateWindow
@@ -68,7 +69,7 @@ namespace Autodesk.Forge.RevitIO.CreateWindow
             }
             else
             {
-                windowFamilyParams = WindowsDAParams.Parse("C:\\Users\\zhongwu\\Documents\\WindowParams.json");
+                windowFamilyParams = WindowsDAParams.Parse(Directory.GetCurrentDirectory() + "\\WindowParams.json");
             }
 
             m_para = new WizardParameter();

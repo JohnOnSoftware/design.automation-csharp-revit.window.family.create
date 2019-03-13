@@ -24,7 +24,7 @@ using System;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.ApplicationServices;
 using DesignAutomationFramework;
-
+using System.IO;
 
 namespace Autodesk.Forge.RevitIO.CreateWindow
 {
@@ -61,7 +61,8 @@ namespace Autodesk.Forge.RevitIO.CreateWindow
         public void HandleApplicationInitializedEvent(object sender, Autodesk.Revit.DB.Events.ApplicationInitializedEventArgs e)
         {
             Autodesk.Revit.ApplicationServices.Application app = sender as Autodesk.Revit.ApplicationServices.Application;
-            DesignAutomationData data = new DesignAutomationData(app, "C:\\Program Files\\Autodesk\\Revit 2019\\Samples\\WindowFamilyTmp.rft");
+            String filePath = Directory.GetCurrentDirectory() + "\\WindowFamilyTmp.rft";
+            DesignAutomationData data = new DesignAutomationData(app, filePath );
             CreateWindowFamily(data);
         }
 

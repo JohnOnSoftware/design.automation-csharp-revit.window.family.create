@@ -211,8 +211,8 @@ namespace WebApp.Controllers
                     Parameters = new Dictionary<string, Parameter>()
                     {
                         { "inputFile", new Parameter() { Description = "Input Revit Window Family Templete", LocalName = "$(inputFile)", Ondemand = false, Required = true, Verb = Verb.Get, Zip = false } },
-                        { "windowParams", new Parameter() { Description = "Window Family parameters", LocalName = "WindowParams.json", Ondemand = false, Required = false, Verb = Verb.Get, Zip = false } },
-                        { "resultFamily", new Parameter() { Description = "new created Winodw Family", LocalName = "WindowFamily.rfa", Ondemand = false, Required = true, Verb = Verb.Put, Zip = false } }
+                        { "inputJson", new Parameter() { Description = "Window Family parameters", LocalName = "WindowParams.json", Ondemand = false, Required = false, Verb = Verb.Get, Zip = false } },
+                        { "outputFile", new Parameter() { Description = "new created Winodw Family", LocalName = "WindowFamily.rfa", Ondemand = false, Required = true, Verb = Verb.Put, Zip = false } }
                     },
                     Settings = new Dictionary<string, ISetting>()
                     {
@@ -262,8 +262,6 @@ namespace WebApp.Controllers
         {
             // basic input validation
             JObject workItemData = JObject.Parse(input.data);
-            string widthParam = workItemData["FileName"].Value<string>();
-            string heigthParam = workItemData["FamilyType"].Value<string>();
             string activityName = string.Format("{0}.{1}", NickName, input.activityName);
             string browerConnectionId = input.browerConnectionId;
 
@@ -300,23 +298,22 @@ namespace WebApp.Controllers
             {
                 Url = string.Format("https://developer.api.autodesk.com/oss/v2/buckets/{0}/objects/{1}", bucketKey, inputFileNameOSS),
                 Headers = new Dictionary<string, string>()
-        {
-            { "Authorization", "Bearer " + oauth.access_token }
-        }
+                {
+                    { "Authorization", "Bearer " + oauth.access_token }
+                }
             };
             // 2. input json
-            dynamic inputJson = new JObject();
-            inputJson.Width = widthParam;
-            inputJson.Height = heigthParam;
             XrefTreeArgument inputJsonArgument = new XrefTreeArgument()
             {
                 Url = "data:application/json, " + workItemData.ToString(Formatting.None).Replace("\"", "'")
             };
             // 3. output file
-            string outputFileNameOSS = string.Format("{0}_output_{1}.rfa", DateTime.Now.ToString("yyyyMMddhhmmss"), Path.GetFileNameWithoutExtension(input.inputFile.FileName)); // avoid overriding
+            //string outputFileNameOSS = string.Format("{0}_output_{1}.rfa", DateTime.Now.ToString("yyyyMMddhhmmss"), Path.GetFileNameWithoutExtension(input.inputFile.FileName)); // avoid overriding
+            string fileName = workItemData["FileName"].Value<string>();
+
             XrefTreeArgument outputFileArgument = new XrefTreeArgument()
             {
-                Url = string.Format("https://developer.api.autodesk.com/oss/v2/buckets/{0}/objects/{1}", bucketKey, outputFileNameOSS),
+                Url = string.Format("https://developer.api.autodesk.com/oss/v2/buckets/{0}/objects/{1}", bucketKey, fileName),
                 Verb = Verb.Put,
                 Headers = new Dictionary<string, string>()
             {
@@ -326,7 +323,7 @@ namespace WebApp.Controllers
 
             // prepare & submit workitem
             // the callback contains the connectionId (used to identify the client) and the outputFileName of this workitem
-            string callbackUrl = string.Format("{0}/api/forge/callback/designautomation?id={1}&outputFileName={2}", OAuthController.GetAppSetting("FORGE_WEBHOOK_CALLBACK_HOST"), browerConnectionId, outputFileNameOSS);
+            string callbackUrl = string.Format("{0}/api/forge/callback/designautomation?id={1}&outputFileName={2}", OAuthController.GetAppSetting("FORGE_WEBHOOK_CALLBACK_HOST"), browerConnectionId, fileName);
             Console.WriteLine(callbackUrl);
             WorkItem workItemSpec = new WorkItem()
             {
@@ -334,8 +331,8 @@ namespace WebApp.Controllers
                 Arguments = new Dictionary<string, IArgument>()
         {
             { "inputFile", inputFileArgument },
-            { "windowParams",  inputJsonArgument },
-            { "resultFamily", outputFileArgument },
+            { "inputJson",  inputJsonArgument },
+            { "outputFile", outputFileArgument },
             { "onComplete", new XrefTreeArgument { Verb = Verb.Post, Url = callbackUrl } }
         }
             };
