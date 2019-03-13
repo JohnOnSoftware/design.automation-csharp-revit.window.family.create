@@ -21,14 +21,14 @@ This sample demostrated how to create a window family using Design Automation fo
 This sample is based on Learn Forge [Design Automation Sample Tutorial](http://learnforge.autodesk.io/#/tutorials/modifymodels), the workflow is pretty similar, please make sure to go through that sample first, or you are already familiar with that. 
 
 
-# Main Parts of The Work
+## Main Parts of The Work
 1. Migrate the existing Revit WindowWizard Plugin to be used within AppBundle of Design Automation for Revit. Please check [PlugIn](./FamilyCreationPlugin/) 
 
 2. Create your App, upload the AppBundle, define your Activity and test the workitem with the Postman collection under [Postman Collection](./PostmanCollection/) 
 
 3. Create the Web App to call the workitem.
 
-**To use the sample, the workflow should be:**
+## How to use
 1. Build the solution to create one AppBundle under `wwwroot/bundles`;
 2. Create/Update AppBundle & Activity in `Configure` dialog;
 3. Select window style, either `Double Hung`, `Fixed`, or `Sliding Double`;
@@ -82,7 +82,7 @@ Run `ngrok http 3000 -host-header="localhost:3000"` to create a tunnel to your l
 
 A compiled version of the `Revit` plugin (.bundles) is included on the `WebApp` module, under `wwwroot/bundles` folder. Any changes on these plugins will require to create a new .bundle, the **Post-build** event should create it. Please review the readme for [FamilyCreationPlugin](https://github.com/JohnOnSoftware/design.automation-csharp-revit.window.family.create/tree/master/FamilyCreationPlugin)
 
-Start the app.
+**Start the app**
 
 Open `http://localhost:3000` to start the app, follow the workflow I mentioned before.
 
