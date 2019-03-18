@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "92e6e98f-c92f-4182-964d-4d73790efc1a",
-		"name": "RevitIO.FileUpgrader",
+		"_postman_id": "b262ecdd-7f9a-4ed2-b3e3-b88f1fcf755f",
+		"name": "RevitIO.WindowFamilyCreation",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -106,7 +106,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"id\": \"{{appBundleName}}\",\r\n\t\"engine\": \"Autodesk.Revit+2019\",\r\n\t\"description\": \"Upgrade Revit files to 2019\"\r\n}"
+					"raw": "{\r\n\t\"id\": \"{{appBundleName}}\",\r\n\t\"engine\": \"Autodesk.Revit+2019\",\r\n\t\"description\": \"Create window family\"\r\n}"
 				},
 				"url": {
 					"raw": "{{dasApiRoot}}/appbundles",
@@ -288,7 +288,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"id\": \"{{activityName}}\",\r\n\t\"commandLine\": [ \"$(engine.path)\\\\\\\\revitcoreconsole.exe /i $(args[rvtFile].path) /al $(appbundles[{{appBundleName}}].path)\" ],\r\n\t\"parameters\": {\r\n\t  \"rvtFile\": {\r\n\t\t\"zip\": false,\r\n\t\t\"ondemand\": false,\r\n\t\t\"verb\": \"get\",\r\n\t\t\"description\": \"Input Revit model\",\r\n\t\t\"required\": true\r\n\t  },\r\n\t  \"resultrvt\": {\r\n\t\t\"zip\": false,\r\n\t\t\"ondemand\": false,\r\n\t\t\"verb\": \"put\",\r\n\t\t\"description\": \"upgraded revit Rvt file\",\r\n\t\t\"required\": false,\r\n\t\t\"localName\": \"revitupgrade.rvt\"\r\n\t  },\r\n\t  \"resultrfa\": {\r\n\t\t\"zip\": false,\r\n\t\t\"ondemand\": false,\r\n\t\t\"verb\": \"put\",\r\n\t\t\"description\": \"upgraded revit Rfa file\",\r\n\t\t\"required\": false,\r\n\t\t\"localName\": \"revitupgrade.rfa\"\r\n\t  },\r\n\t  \"resultrte\": {\r\n\t\t\"zip\": false,\r\n\t\t\"ondemand\": false,\r\n\t\t\"verb\": \"put\",\r\n\t\t\"description\": \"upgraded revit Rte file\",\r\n\t\t\"required\": false,\r\n\t\t\"localName\": \"revitupgrade.rte\"\r\n\t  }\r\n\t},\r\n\t\"engine\": \"Autodesk.Revit+2019\",\r\n\t\"appbundles\": [ \"{{dasNickName}}.{{appBundleName}}+{{appBundleAlias}}\" ],\r\n\t\"description\": \"Upgrade revit file to lastest version from old versions.\"\r\n}"
+					"raw": "{\r\n\t\"id\": \"{{activityName}}\",\r\n\t\"commandLine\": [ \"$(engine.path)\\\\\\\\revitcoreconsole.exe /i $(args[inputFile].path) /al $(appbundles[{{appBundleName}}].path)\" ],\r\n\t\"parameters\": {\r\n\t  \"inputFile\": {\r\n\t\t\"zip\": false,\r\n\t\t\"ondemand\": false,\r\n\t\t\"verb\": \"get\",\r\n\t\t\"description\": \"Input Revit Window Family Templete\",\r\n\t\t\"required\": true\r\n\t  },\r\n\t  \"inputJson\": {\r\n\t\t\"zip\": false,\r\n\t\t\"ondemand\": false,\r\n\t\t\"verb\": \"get\",\r\n\t\t\"description\": \"Window Family parameters\",\r\n\t\t\"required\": false,\r\n\t\t\"localName\": \"WindowParams.json\"\r\n\t  },\r\n\t  \"outputFile\": {\r\n\t\t\"zip\": false,\r\n\t\t\"ondemand\": false,\r\n\t\t\"verb\": \"put\",\r\n\t\t\"description\": \"new created Winodw Family\",\r\n\t\t\"required\": true,\r\n\t\t\"localName\": \"WindowFamily.rfa\"\r\n\t  }\r\n\t},\r\n\t\"engine\": \"Autodesk.Revit+2019\",\r\n\t\"appbundles\": [ \"{{dasNickName}}.{{appBundleName}}+{{appBundleAlias}}\" ],\r\n\t\"description\": \"Create Window Family Activity.\"\r\n}"
 				},
 				"url": {
 					"raw": "{{dasApiRoot}}/activities",
@@ -364,7 +364,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"activityId\": \"{{dasNickName}}.{{activityName}}+{{activityAlias}}\",\r\n  \"arguments\": {\r\n    \"rvtFile\": {\r\n      \"url\": \"https://s3-us-west-2.amazonaws.com/adn-public/Revit2014.rvt\"\r\n    },\r\n    \"resultrvt\": {\r\n      \"verb\": \"put\",\r\n      \"url\": \"https://developer.api.autodesk.com/oss/v2/signedresources/7523b9c8-ffaf-43f1-93c8-092fcafc1c42?region=US\"\r\n    }\r\n  }\r\n}\r\n"
+					"raw": "{\r\n  \"activityId\": \"{{dasNickName}}.{{activityName}}+{{activityAlias}}\",\r\n  \"arguments\": {\r\n        \"inputFile\":{\r\n            \"url\":\"https://developer.api.autodesk.com/oss/v2/signedresources/5be84110-960a-4470-85dc-7a6b30418275?region=US\"\r\n        },\r\n        \"inputJson\":{\r\n            \"url\":\"data:application/json,{ 'Types': [{'TypeName': 'My Type', 'WindowHeight': 6, 'WindowWidth': 3, 'WindowInset':0.05, 'WindowSillHeight':3},{'TypeName': 'My New Type', 'WindowHeight': 8, 'WindowWidth': 6, 'WindowInset':0.1, 'WindowSillHeight':6}], 'GlassPaneMaterial': 'Glass', 'SashMaterial': 'Maple', 'WindowStyle':'DoubleHungWindow'}\"\r\n        },\r\n        \"outputFile\":{\r\n            \"verb\":\"put\",\r\n            \"url\":\"https://developer.api.autodesk.com/oss/v2/signedresources/f24c51d6-f92b-4c43-9a7c-68ab328c31d8?region=US\"\r\n        }\r\n  }\r\n}\r\n"
 				},
 				"url": {
 					"raw": "{{dasApiRoot}}/workitems",
