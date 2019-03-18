@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Autodesk.Forge.RevitIO.CreateWindow</RootNamespace>
-    <AssemblyName>CreateWindowApp</AssemblyName>
+    <AssemblyName>CreateWindow</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -119,17 +119,17 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CreateWindowApp.bundle\PackageContents.xml" />
+    <Content Include="CreateWindow.bundle\PackageContents.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CreateWindowApp.bundle\Contents\CreateWindowApp.addin" />
+    <None Include="CreateWindow.bundle\Contents\CreateWindow.addin" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /F "$(TargetDir)*.dll" "$(ProjectDir)CreateWindowApp.bundle\Contents\"
-del /F "$(ProjectDir)..\WebApp\wwwroot\bundles\CreateWindowApp.zip"
-"C:\Program Files\7-Zip\7z.exe" a -tzip "$(ProjectDir)../WebApp/wwwroot/bundles/CreateWindowApp.zip" "$(ProjectDir)CreateWindowApp.bundle\" -xr0!*.pdb</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y /F "$(TargetDir)*.dll" "$(ProjectDir)CreateWindow.bundle\Contents\"
+del /F "$(ProjectDir)..\WebApp\wwwroot\bundles\CreateWindow.zip"
+"C:\Program Files\7-Zip\7z.exe" a -tzip "$(ProjectDir)../WebApp/wwwroot/bundles/CreateWindow.zip" "$(ProjectDir)CreateWindow.bundle\" -xr0!*.pdb</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

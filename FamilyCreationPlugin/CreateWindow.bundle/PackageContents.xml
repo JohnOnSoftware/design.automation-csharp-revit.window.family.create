@@ -5,9 +5,9 @@
                          Platform="Revit"
                          SeriesMin="R2019"
                          SeriesMax="R2019" />
-    <ComponentEntry AppName="CreateWindowApp"
+    <ComponentEntry AppName="CreateWindow"
                     Version="1.0.0"
-                    ModuleName="./Contents/CreateWindowApp.addin"
+                    ModuleName="./Contents/CreateWindow.addin"
                     AppDescription="Create Window Family App"
                     LoadOnCommandInvocation="False"
                     LoadOnRevitStartup="True" />
