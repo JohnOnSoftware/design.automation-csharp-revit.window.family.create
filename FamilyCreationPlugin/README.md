@@ -29,6 +29,54 @@ Here is the main steps to migrate the Revit addin, before read the detail steps,
 - In **DoubleHungWinCreation.cs**, use Application to replace UIApplication, and update the all the referenced place.
 
 ## Let's make it work as AppBundle of Design Automation for Revit
+- Since the UI is removed, we will use JSON file instead as input of parameters, create 2 new classes **TypeDAParams** and **WindowsDAParams** to handle the input JSON format parameter as follow(Make sure to install **Newtonsoft.Json** by NuGet Package Manager first):
+```
+        using System;
+        using System.IO;
+        using Newtonsoft.Json;
+
+        namespace Autodesk.Forge.RevitIO.CreateWindow
+        {
+
+            internal class TypeDAParams
+            {
+                public String TypeName { get; set; } = "New Type";
+                public Double WindowHeight { get; set; } = 4;
+                public Double WindowWidth { get; set; } = 2;
+                public Double WindowInset { get; set; } = 0.05;
+                public Double WindowSillHeight { get; set; } = 3;
+
+            }
+
+            internal class WindowsDAParams
+            {
+                public TypeDAParams[] Types { get; set; } = { new TypeDAParams() };
+
+                public String WindowStyle { get; set; } = "DoubleHungWindow";
+                public String GlassPaneMaterial { get; set; } = "Default";
+                public String SashMaterial { get; set; } = "Default";
+                public String WindowFamilyName { get; set; } = "Double Hung.rfa";
+
+                static public WindowsDAParams Parse(string jsonPath)
+                {
+                    try
+                    {
+                        if (!File.Exists(jsonPath))
+                            return new WindowsDAParams();
+
+                        string jsonContents = File.ReadAllText(jsonPath);
+                        return JsonConvert.DeserializeObject<WindowsDAParams>(jsonContents);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Exception when parsing json file: " + ex);
+                        return null;
+                    }
+                }
+            }
+        }
+```
+
 - Add reference to DesignAutomationBridge.dll(please download at [Nuget](https://www.nuget.org/packages/Autodesk.Forge.DesignAutomation)), remove the command class, create the new class **CreateWindowApp** from **IExternalDBApplication**, also add a helper class **RuntimeValue** to switch between local and cloud, the code should look like: 
 ```   
     internal class RuntimeValue
@@ -120,55 +168,6 @@ Here is the main steps to migrate the Revit addin, before read the detail steps,
     };
 ```
 
-
-- Since the UI is removed, we will use JSON file instead as input of parameters, create 2 new classes **TypeDAParams** and **WindowsDAParams** to handle the input JSON format parameter as follow(Make sure to install **Newtonsoft.Json** by NuGet Package Manager first):
-```
-        using System;
-        using System.IO;
-        using Newtonsoft.Json;
-
-        namespace Autodesk.Forge.RevitIO.CreateWindow
-        {
-
-            internal class TypeDAParams
-            {
-                public String TypeName { get; set; } = "New Type";
-                public Double WindowHeight { get; set; } = 4;
-                public Double WindowWidth { get; set; } = 2;
-                public Double WindowInset { get; set; } = 0.05;
-                public Double WindowSillHeight { get; set; } = 3;
-
-            }
-
-            internal class WindowsDAParams
-            {
-                public TypeDAParams[] Types { get; set; } = { new TypeDAParams() };
-
-                public String WindowStyle { get; set; } = "DoubleHungWindow";
-                public String GlassPaneMaterial { get; set; } = "Default";
-                public String SashMaterial { get; set; } = "Default";
-                public String WindowFamilyName { get; set; } = "Double Hung.rfa";
-
-                static public WindowsDAParams Parse(string jsonPath)
-                {
-                    try
-                    {
-                        if (!File.Exists(jsonPath))
-                            return new WindowsDAParams();
-
-                        string jsonContents = File.ReadAllText(jsonPath);
-                        return JsonConvert.DeserializeObject<WindowsDAParams>(jsonContents);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Exception when parsing json file: " + ex);
-                        return null;
-                    }
-                }
-            }
-        }
-```
-
 - Update the method **WindowWizard.RunWizard()** as follow to use the different way for parameter collection:
 ```
         public bool RunWizard()
@@ -215,7 +214,7 @@ Here is the main steps to migrate the Revit addin, before read the detail steps,
         }
 ```
 
-- Use different approaches to save the new created RFA file, add the following code to the constructor of class **DoubleHungWinCreation**:
+- Use different approaches to save the new created RFA file, add the following code to the constructor of class **DoubleHungWinCreation** to set the PathName:
 ```
         if (RuntimeValue.RunOnCloud)
         {
@@ -223,11 +222,16 @@ Here is the main steps to migrate the Revit addin, before read the detail steps,
         }
         else
         {
-            para.PathName = "C:\\Users\\zhongwu\\Documents\\DoubleHungWin.rfa";
+            para.PathName = "C:\\Users\\zhongwu\\Documents\\WindowFamily.rfa";
         }
 ```
+remove 
+```
+		para.PathName = Path.GetDirectoryName(para.PathName) + "Double Hung.rfa";
 
-- To make the new created family file could be previewed, modify the code to create the thumbnail for the family as follow:       
+```
+
+- To make the new created family file could be previewed, modify the code in DoubleHungWinCreation.Creation() to create the thumbnail for the family as follow:       
 ```
         if (File.Exists(m_para.PathName))
             File.Delete(m_para.PathName);
