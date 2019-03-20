@@ -77,7 +77,7 @@ Here is the main steps to migrate the Revit addin, before read the detail steps,
         }
 ```
 
-- Add reference to DesignAutomationBridge.dll(please download at [Nuget](https://www.nuget.org/packages/Autodesk.Forge.DesignAutomation)), remove the command class, create the new class **CreateWindowApp** from **IExternalDBApplication**, also add a helper class **RuntimeValue** to switch between local and cloud, the code should look like: 
+- Add reference to DesignAutomationBridge.dll(please include prerelease and download at [Nuget](https://www.nuget.org/packages/Autodesk.Forge.DesignAutomation.Revit)), remove the command class, create the new class **CreateWindowApp** from **IExternalDBApplication**, also add a helper class **RuntimeValue** to switch between local and cloud, the code should look like: 
 ```   
     internal class RuntimeValue
     {
