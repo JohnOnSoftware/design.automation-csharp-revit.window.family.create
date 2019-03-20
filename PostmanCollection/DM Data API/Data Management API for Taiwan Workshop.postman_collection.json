@@ -1,0 +1,471 @@
+{
+	"info": {
+		"_postman_id": "47053eb4-2a40-463e-ac04-81a656749ef4",
+		"name": "Data Management API for Taiwan Workshop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Data Helper API",
+			"item": [
+				{
+					"name": "Authenticate",
+					"item": [
+						{
+							"name": "New token for Data API",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a71542d4-3c80-4ba4-af28-ad9d74406c91",
+										"type": "text/javascript",
+										"exec": [
+											"var body = JSON.parse(responseBody);",
+											"pm.environment.set(\"dataApiToken\", body[\"access_token\"]);",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "client_id",
+											"value": "{{client_id}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{client_secret}}",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "client_credentials",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "bucket:read bucket:update bucket:create bucket:delete data:write data:create data:read",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authentication/v1/authenticate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authentication",
+										"v1",
+										"authenticate"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Bucket",
+					"item": [
+						{
+							"name": "Create Bucket",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5b993251-5b30-4bab-bc41-2f15cc54d56e",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "4579fac2-2274-4de2-b84c-76d093c59bd8",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{dataApiToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"bucketKey\": \"{{bucketKey}}\",\r\n    \"policyKey\": \"persistent\"\r\n}\r\n"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/oss/v2/buckets",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"oss",
+										"v2",
+										"buckets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get bucket details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5b993251-5b30-4bab-bc41-2f15cc54d56e",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "4579fac2-2274-4de2-b84c-76d093c59bd8",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{dataApiToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/oss/v2/buckets/{{bucketKey}}/details",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"oss",
+										"v2",
+										"buckets",
+										"{{bucketKey}}",
+										"details"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get objects in a bucket",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f0586fdc-689e-414b-a469-5b428c52b995",
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{dataApiToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/oss/v2/buckets/{{bucketKey}}/objects",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"oss",
+										"v2",
+										"buckets",
+										"{{bucketKey}}",
+										"objects"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "CreateWindowFamilyData",
+					"item": [
+						{
+							"name": "Create signed URL with write access",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a51a22b3-9614-4b93-949f-543ed399964d",
+										"exec": [
+											"var body = JSON.parse(responseBody);",
+											"pm.environment.set(\"createWindowFamilyResultUrl\", body[\"signedUrl\"]);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "9fa205f9-6d48-4430-9609-ca833ff4e8ae",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{dataApiToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t \"minutesExpiration\" : 30000000\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/oss/v2/buckets/{{bucketKey}}/objects/windowFamily.rfa/signed?access=readwrite",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"oss",
+										"v2",
+										"buckets",
+										"{{bucketKey}}",
+										"objects",
+										"windowFamily.rfa",
+										"signed"
+									],
+									"query": [
+										{
+											"key": "access",
+											"value": "readwrite"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Download result",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c69d77e5-bb7f-4c4e-9f83-ad6e1f357ed6",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "9fa205f9-6d48-4430-9609-ca833ff4e8ae",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{dataApiToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/oss/v2/buckets/{{bucketKey}}/objects/windowFamily.rfa",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"oss",
+										"v2",
+										"buckets",
+										"{{bucketKey}}",
+										"objects",
+										"windowFamily.rfa"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create empty output object",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5b993251-5b30-4bab-bc41-2f15cc54d56e",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "3fb6c434-efa2-4fed-bc11-a7926e3e70ab",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/octet-stream"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{dataApiToken}}"
+									}
+								],
+								"body": {
+									"mode": "file",
+									"file": {}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/oss/v2/buckets/{{bucketKey}}/objects/windowFamily.rfa",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"oss",
+										"v2",
+										"buckets",
+										"{{bucketKey}}",
+										"objects",
+										"windowFamily.rfa"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "82de90ad-72e0-45d9-bf06-3a8d8e98a515",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "9677fa19-ccaf-433e-97f2-57fcb0baf72b",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "063ca655-0ba8-4655-9065-a9e867825bb7",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2abd4cee-9729-4c81-a804-eb5997634c54",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
